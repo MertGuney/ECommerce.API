@@ -15,6 +15,7 @@ namespace ECommerce.API.Controllers
             _productService = productService;
         }
 
+        [HttpGet]
         public IActionResult GetProducts()
         {
             return Ok(_productService.GetProducts());
