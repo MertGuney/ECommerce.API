@@ -1,11 +1,7 @@
-﻿using ECommerce.Application.Abstractions;
-using ECommerce.Persistance.Concretes;
+﻿using ECommerce.Persistance.Contexts;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Persistance
 {
@@ -13,7 +9,11 @@ namespace ECommerce.Persistance
     {
         public static void AddPersistanceServices(this IServiceCollection services)
         {
-            services.AddScoped<IProductService, ProductService>();
+
+            services.AddDbContext<ECommerceDbContext>(opts =>
+            {
+                opts.UseNpgsql(Configuration.ConnectionString);
+            });
         }
     }
 }
