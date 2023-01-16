@@ -3,11 +3,6 @@ using ECommerce.Domain.Entities.Common;
 using ECommerce.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Persistance.Repositories
 {
@@ -42,7 +37,7 @@ namespace ECommerce.Persistance.Repositories
 
         public async Task<bool> RemoveAsync(string id)
         {
-            T model = await Table.FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
+            T model = await Table.FindAsync(id);
             return Remove(model);
         }
 
@@ -52,12 +47,12 @@ namespace ECommerce.Persistance.Repositories
             return true;
         }
 
-        public async Task<int> SaveAsync() => await _context.SaveChangesAsync();
-
         public bool Update(T entity)
         {
             EntityEntry<T> entityEntry = Table.Update(entity);
             return entityEntry.State == EntityState.Modified;
         }
+
+        public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
     }
 }

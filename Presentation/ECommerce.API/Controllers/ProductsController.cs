@@ -25,7 +25,7 @@ namespace ECommerce.API.Controllers
         public async Task<IActionResult> AddProduct()
         {
             await _productWriteRepository.AddAsync(new Product { Name = "Test", Price = 10, Stock = 10, CreatedDate = DateTime.UtcNow });
-            await _productWriteRepository.SaveAsync();
+            await _productWriteRepository.SaveChangesAsync();
             return Ok();
         }
     }

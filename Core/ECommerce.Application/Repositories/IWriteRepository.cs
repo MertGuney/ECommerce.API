@@ -1,9 +1,4 @@
 ﻿using ECommerce.Domain.Entities.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Application.Repositories
 {
@@ -15,6 +10,6 @@ namespace ECommerce.Application.Repositories
         bool Remove(T entity);
         Task<bool> RemoveAsync(string id);
         bool RemoveRange(List<T> entities);
-        Task<int> SaveAsync();
+        Task<int> SaveChangesAsync();
     }
 }

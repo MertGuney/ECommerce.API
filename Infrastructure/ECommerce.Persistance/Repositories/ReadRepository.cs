@@ -2,12 +2,7 @@
 using ECommerce.Domain.Entities.Common;
 using ECommerce.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Persistance.Repositories
 {
@@ -22,12 +17,12 @@ namespace ECommerce.Persistance.Repositories
 
         public DbSet<T> Table => _context.Set<T>();
 
-        public IQueryable<T> GetAll() => Table;
+        public IQueryable<T> GetAll(bool isTracking = true) => isTracking ? Table : Table.AsNoTracking();
 
-        public async Task<T> GetByIdAsync(string id) => await Table.FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
+        public async Task<T> GetByIdAsync(string id, bool isTracking = true) => isTracking ? await Table.FindAsync(id) : await Table.AsNoTracking().FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
 
-        public async Task<T> SingleAsync(Expression<Func<T, bool>> expression) => await Table.SingleAsync(expression);
+        public async Task<T> SingleAsync(Expression<Func<T, bool>> expression, bool isTracking = true) => isTracking ? await Table.SingleAsync(expression) : await Table.AsNoTracking().SingleAsync(expression);
 
-        public IQueryable<T> Where(Expression<Func<T, bool>> expression) => Table.Where(expression);
+        public IQueryable<T> Where(Expression<Func<T, bool>> expression, bool isTracking = true) => isTracking ? Table.Where(expression) : Table.AsNoTracking().Where(expression);
     }
 }
