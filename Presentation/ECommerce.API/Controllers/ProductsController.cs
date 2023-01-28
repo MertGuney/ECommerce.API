@@ -1,6 +1,6 @@
 ﻿using ECommerce.Application.Repositories.Products;
+using ECommerce.Application.ViewModels.Products;
 using ECommerce.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers
@@ -19,14 +19,36 @@ namespace ECommerce.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetProducts() => Ok(_productReadRepository.GetAll());
+        public IActionResult GetProducts() => Ok(_productReadRepository.GetAll(false));
+
+        [HttpGet("{id}")]
+        public IActionResult GetProductById(string id) => Ok(_productReadRepository.GetByIdAsync(id, false));
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct()
+        public async Task<IActionResult> AddProduct(CreateProductViewModel model)
         {
-            await _productWriteRepository.AddAsync(new Product { Name = "Test", Price = 10, Stock = 10, CreatedDate = DateTime.UtcNow });
+            await _productWriteRepository.AddAsync(new() { Name = model.Name, Price = model.Price, Stock = model.Stock });
             await _productWriteRepository.SaveChangesAsync();
-            return Ok();
+            return StatusCode(StatusCodes.Status201Created);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateProduct(UpdateProductViewModel model)
+        {
+            var product = await _productReadRepository.GetByIdAsync(model.Id);
+            product.Stock = model.Stock;
+            product.Name = model.Name;
+            product.Price = model.Price;
+            await _productWriteRepository.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(string id)
+        {
+            await _productWriteRepository.RemoveAsync(id);
+            await _productWriteRepository.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
