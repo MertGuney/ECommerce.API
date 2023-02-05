@@ -1,6 +1,5 @@
 ﻿using ECommerce.Application.Repositories.Products;
 using ECommerce.Application.ViewModels.Products;
-using ECommerce.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers
