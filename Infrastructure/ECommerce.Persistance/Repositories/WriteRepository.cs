@@ -37,7 +37,7 @@ namespace ECommerce.Persistance.Repositories
 
         public async Task<bool> RemoveAsync(string id)
         {
-            T model = await Table.FindAsync(id);
+            T model = await Table.FindAsync(Guid.Parse(id));
             return Remove(model);
         }
 
