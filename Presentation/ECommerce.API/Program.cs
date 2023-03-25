@@ -1,4 +1,5 @@
 using ECommerce.Application.Validators.Products;
+using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Filters;
 using ECommerce.Persistance;
 using FluentValidation;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddPersistanceServices();
+builder.Services.AddInfrastructureService();
 
 builder.Services.AddCors(opts =>
 {
