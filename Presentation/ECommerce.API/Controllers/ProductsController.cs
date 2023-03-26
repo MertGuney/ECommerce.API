@@ -1,4 +1,6 @@
-﻿using ECommerce.Application.Repositories.Products;
+﻿using ECommerce.Application.Repositories.InvoiceFile;
+using ECommerce.Application.Repositories.ProductImageFile;
+using ECommerce.Application.Repositories.Products;
 using ECommerce.Application.RequestParameters;
 using ECommerce.Application.Services;
 using ECommerce.Application.ViewModels.Products;
@@ -13,12 +15,20 @@ namespace ECommerce.API.Controllers
         private readonly IProductReadRepository _productReadRepository;
         private readonly IProductWriteRepository _productWriteRepository;
         private readonly IFileService _fileService;
+        private readonly IProductImageFileReadRepository _productImageFileReadRepository;
+        private readonly IProductImageFileWriteRepository _productImageFileWriteRepository;
+        private readonly IInvoiceFileReadRepository _invoiceFileReadRepository;
+        private readonly IInvoiceFileWriteRepository _invoiceFileWriteRepository;
 
-        public ProductsController(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, IFileService fileService)
+        public ProductsController(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, IFileService fileService, IProductImageFileReadRepository productImageFileReadRepository, IProductImageFileWriteRepository productImageFileWriteRepository, IInvoiceFileReadRepository invoiceFileReadRepository, IInvoiceFileWriteRepository invoiceFileWriteRepository)
         {
             _productReadRepository = productReadRepository;
             _productWriteRepository = productWriteRepository;
             _fileService = fileService;
+            _productImageFileReadRepository = productImageFileReadRepository;
+            _productImageFileWriteRepository = productImageFileWriteRepository;
+            _invoiceFileReadRepository = invoiceFileReadRepository;
+            _invoiceFileWriteRepository = invoiceFileWriteRepository;
         }
 
         [HttpGet]
@@ -75,7 +85,13 @@ namespace ECommerce.API.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Upload()
         {
-            await _fileService.UploadAsync("resource/images/products", Request.Form.Files);
+            var datas = await _fileService.UploadAsync("resource/images/products", Request.Form.Files);
+            await _productImageFileWriteRepository.AddRangeAsync(datas.Select(x => new Domain.Entities.ProductImageFile()
+            {
+                FileName = x.fileName,
+                Path = x.path
+            }).ToList());
+            await _productImageFileWriteRepository.SaveChangesAsync();
             return Ok();
         }
     }

@@ -31,7 +31,8 @@ namespace ECommerce.Infrastructure.Services
             }
 
         }
-        //TODO FileRename Düzenelencek
+
+        //TODO FileRename Düzenelenecek
         //private static async Task<string> FileRenameAsync(string path, string fileName, bool first = true)
         //{
         //    var newFileName = await Task.Run<string>(async () =>
@@ -127,7 +128,7 @@ namespace ECommerce.Infrastructure.Services
                 var fileNewName = await FileRenameAsync(uploadPath, file.FileName);
                 string fullPath = Path.Combine(uploadPath, fileNewName);
                 var result = await CopyFileAsync(fullPath, file);
-                datas.Add((fileNewName, fullPath));
+                datas.Add((fileNewName, Path.Combine(path, fileNewName)));
                 results.Add(result);
             }
             if (results.TrueForAll(x => x.Equals(true)))

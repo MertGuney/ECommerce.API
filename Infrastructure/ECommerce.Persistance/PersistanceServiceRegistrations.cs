@@ -1,5 +1,8 @@
 ﻿using ECommerce.Application.Repositories.Customers;
+using ECommerce.Application.Repositories.File;
+using ECommerce.Application.Repositories.InvoiceFile;
 using ECommerce.Application.Repositories.Orders;
+using ECommerce.Application.Repositories.ProductImageFile;
 using ECommerce.Application.Repositories.Products;
 using ECommerce.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +23,15 @@ namespace ECommerce.Persistance
 
             services.AddScoped<IProductReadRepository, ProductReadRepository>();
             services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
+
+            services.AddScoped<IFileReadRepository, FileReadRepository>();
+            services.AddScoped<IFileWriteRepository, FileWriteRepository>();
+
+            services.AddScoped<IProductImageFileReadRepository, ProductImageFileReadRepository>();
+            services.AddScoped<IProductImageFileWriteRepository, ProductImageFileWriteRepository>();
+
+            services.AddScoped<IInvoiceFileReadRepository, InvoiceFileReadRepository>();
+            services.AddScoped<IInvoiceFileWriteRepository, InvoiceFileWriteRepository>();
 
 
             services.AddDbContext<ECommerceDbContext>(opts => opts.UseNpgsql(Configuration.ConnectionString));
